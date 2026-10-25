@@ -1,0 +1,107 @@
+{
+  "name": "Ask WalnutLink why a Chinese tech company's numbers moved",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "8f32e265-1d16-41d5-969d-8c1cd2c1e6eb",
+      "name": "When clicking 'Test workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fd697c2-8435-4cfd-b075-a64eac6579d0",
+              "name": "question",
+              "value": "为什么海康威视2026Q3单季毛利率环比下降了？哪个科目解释了这个变化？",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b61839a3-5928-4a23-b1d2-96baf7138842",
+      "name": "Set the question",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://walnutlink.ai/api/ask",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ question: $json.question }) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "d907ed6c-e4f4-4837-b602-025fb8be4ae4",
+      "name": "WalnutLink A-share Desk",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Why this takes up to five minutes\n\nThis desk reads the filed report before it answers. A cached question comes back in a second; a new one goes into a human-reviewed queue and the response carries the queue position.\n\n**It will not answer quotes.** Ask for a price and you get `410 gone_by_design` — that is the point.\n\nRules: https://walnutlink.ai/skill.md",
+        "height": 260,
+        "width": 380,
+        "color": 4
+      },
+      "id": "510bdc03-9641-431d-8082-ad2899bb1d88",
+      "name": "Read me",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -20
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking 'Test workflow'": {
+      "main": [
+        [
+          {
+            "node": "Set the question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set the question": {
+      "main": [
+        [
+          {
+            "node": "WalnutLink A-share Desk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
